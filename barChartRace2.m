@@ -16,6 +16,7 @@ function hBarObject = barChartRace2(inData,options)
 % author:cuixingxing
 % Email: cuixingxing150@gmail.com
 % 2021.7.13
+% 2021.7.16 minor fix
 %
 arguments
     inData {mustBeNonnegative}
@@ -23,17 +24,29 @@ arguments
     options.Categories (1,:) categorical = categorical("categorical:"+string(1:size(inData)));% Number equal to the number of inData rows
     options.FramesPerDataTick {mustBeInteger,mustBePositive} = 24; % Number of frames in transition on a single time step
     options.GenerateGIF (1,1) {mustBeNumericOrLogical} = false
-    options.TimeLabels (1,:) string = ""
+    options.TimeLabels (1,:) string = ""  % Bottom right corner marked with time point
+    options.TitleLabel (1,1) string = "" % bar chart race title name
 end
 [numClasses,timeSerials,numChannels] = size(inData);
-assert(numClasses>1,'inData must have mulity rows');
-assert(timeSerials>1,'inData must have mulity coloums');
+assert(numClasses>1,'inData must have multiple rows(categories)');
+assert(timeSerials>1,'inData must have multiple coloums(time)');
 assert(numChannels==1,'inData must be 2 dims');
 
 %% global set
-figure('name','barChartRace','Color','white');
+screenSize = get(0,'ScreenSize');
+w = screenSize(3);
+h = screenSize(4);
+if options.TopK>5
+    fWidth = min(w*options.TopK/30,w);
+    fHeight = min(fWidth*options.TopK/10,h);
+else
+    fWidth = w/4.5714;
+    fHeight = h/3.4286;
+end
+figure('name','barChartRace','Color','white','Position',[1,10,fWidth,fHeight]);
 colors = rand(numClasses,3);% 每个类别颜色固定, RGB顺序，[0,1]范围各个强度
 initCategories = options.Categories;% 颜色与此类别一一固定对应
+
 %% update
 previousCategories = initCategories;
 previousState = inData(:,1);
@@ -50,13 +63,19 @@ hText = text(ax,y,x,string(y),'FontWeight','bold');
 if strlength(options.TimeLabels)
     hTimeText = text(ax,max(y),options.TopK,options.TimeLabels(1),...
         'FontWeight','bold',...
-        'FontSize',25);
+        'FontSize',20);
 end
 yrange = ylim;
-set(gca,'YTick',x,'YTickLabel',topKYlabels,...
-    'YDir','reverse','YLim',yrange,'XLim',[0,1.2*max(y)],'XGrid','on',...
-    'FontWeight','bold');
-title(ax,"top "+options.TopK+ " Race!")
+ax.YTick = x;
+ax.YTickLabel = topKYlabels;
+ax.YDir = 'reverse';
+ax.YLim = yrange;
+ax.XLim = [0,1.2*max(y)];
+ax.XGrid = 'on';
+ax.FontWeight = 'bold';
+ax.Box = 'off';
+ax.XAxis.Exponent = 0; % prevent scientific notation
+title(ax,"Top-"+options.TopK+ " Race! "+options.TitleLabel)
 
 for time = 2:timeSerials
     previousState = currentState;
@@ -88,8 +107,9 @@ for time = 2:timeSerials
             hBarObject.YData = y;
             hBarObject.BarWidth = 0.8/bwidth;
             hBarObject.CData = topKColors;
-            set(gca,'YTick',x,'YTickLabel',topKYlabels,...
-                'XLim',[0,1.2*max(y)]);
+            ax.YTick = x;
+            ax.YTickLabel = topKYlabels;
+            ax.XLim = [0,1.2*max(y)];
             for ann = 1:options.TopK
                 hText(ann).Position = [y(ann),x(ann)];
                 hText(ann).String = string(y(ann));

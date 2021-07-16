@@ -1,5 +1,5 @@
 %% 全国房价
-filename = '主要城市年度数据 -住宅平均销售价格.csv';
+filename = './dataSets/主要城市年度数据 -住宅平均销售价格.csv';
 inData = readmatrix(filename,'Range','B5:T39');
 labelnames = readcell(filename,'Range','A5:A39');
 timesStr = readcell(filename,'Range','B4:T4');

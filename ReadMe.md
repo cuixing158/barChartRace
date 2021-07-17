@@ -2,7 +2,7 @@
 此程序旨在用精简的代码产生美观的时间动态直方图，相对前人程序，支持topK显示，调用接口及其简单，方便使用！支持的功能有：指定topK、标签类别指定、类别颜色指定、显示帧率制定、生成GIF动画等。
 
 
-![image_0.png](main_images/image_0.png)
+![output.gif](main_images/output.gif)
 
 
 # 示例一，直接生成动态直方图

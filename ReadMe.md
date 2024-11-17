@@ -5,9 +5,9 @@
 ![output.gif](main_images/output.gif)
 
 
-# 示例一，直接生成动态直方图
+## 示例一，直接生成动态直方图
 
-```matlab:Code
+```matlab
 indata = [4,4,4,4;
     1,5,5,1;
     2,2,2,2;
@@ -19,9 +19,9 @@ barChartRace2(indata);
 ![figure_0.png](main_images/figure_0.png)
 
   
-# 示例二，指定类别标签
+## 示例二，指定类别标签
 
-```matlab:Code
+```matlab
 indata = [4,4,4,4;
     1,5,5,1;
     2,2,2,2;
@@ -33,9 +33,9 @@ h = barChartRace2(indata,"Categories",labels);
 
 ![figure_1.png](main_images/figure_1.png)
 
-# 示例三，生成GIF动画,top10显示，设置播放速率，加右小角时间标注
+## 示例三，生成GIF动画,top10显示，设置播放速率，加右小角时间标注
 
-```matlab:Code
+```matlab
 %% 读入人均GDP数据
 filename = '31省份1993-2018人均GDP.csv';
 inData = readmatrix(filename,'Range','B5:AA35');
